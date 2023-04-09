@@ -16,7 +16,7 @@ exports[`Empty should support empty success render 1`] = `
             style="height: 80px;"
           >
             <img
-              src="empty_default.webp"
+              src="empty_default.png"
             />
           </div>
           <div
@@ -40,7 +40,7 @@ exports[`Empty should support empty success render 1`] = `
           style="height: 80px;"
         >
           <img
-            src="empty_default.webp"
+            src="empty_default.png"
           />
         </div>
         <div

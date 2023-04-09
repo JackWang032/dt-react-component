@@ -3,12 +3,12 @@ import { Empty as AntdEmpty, EmptyProps } from 'antd';
 import './style.scss';
 
 export const IMG_MAP = {
-    default: 'empty_default.webp',
-    project: 'empty_project.webp',
-    search: 'empty_search.webp',
-    chart: 'empty_chart.webp',
-    overview: 'empty_overview.webp',
-    permission: 'empty_permission.webp',
+    default: 'empty_default.png',
+    project: 'empty_project.png',
+    search: 'empty_search.png',
+    chart: 'empty_chart.png',
+    overview: 'empty_overview.png',
+    permission: 'empty_permission.png',
 };
 
 interface IProps {
