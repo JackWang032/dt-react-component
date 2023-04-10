@@ -21,6 +21,7 @@ demo:
 import React, { useState } from 'react';
 import { TableActionMenu } from 'dt-react-component';
 import { Table, message, Popconfirm } from 'antd';
+import 'antd/dist/antd.css';
 
 export default () => {
     const [dataSource, setDataSource] = useState([
