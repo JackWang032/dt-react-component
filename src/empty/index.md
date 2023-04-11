@@ -109,10 +109,12 @@ export default () => {
 
 ## API
 
-| 参数  | 说明                                       | 类型                                                                        | 默认值    |
-| ----- | ------------------------------------------ | --------------------------------------------------------------------------- | --------- |
-| type  | 默认展示图片的类型                         | `default` \| `project` \| `chart` \| `search` \| `permission` \| `overview` | `default` |
-| image | 自定义图片(设置该参数时，默认的图片不生效) | `React.ReactNode`                                                           | -         |
+| 参数       | 说明                                       | 类型                                                                        | 默认值    |
+| ---------- | ------------------------------------------ | --------------------------------------------------------------------------- | --------- |
+| type       | 默认展示图片的类型                         | `default` \| `project` \| `chart` \| `search` \| `permission` \| `overview` | `default` |
+| height     | 图片高度                                   | `number`                                                                    | 80        |
+| image      | 自定义图片(设置该参数时，默认的图片不生效) | `React.ReactNode`                                                           | -         |
+| imageStyle | 自定义图片样式                             | `React.CSSProperties`                                                       | -         |
 
 :::info
 其余属性[继承 antd4.x 的 Empty](https://ant.design/components/empty-cn/#API)
