@@ -33,17 +33,27 @@ const options = [
     { label: 'overview', value: 'overview' },
 ];
 
-const emptyMap = {
-    default: { type: 'default' },
-    project: { type: 'project', description: '空项目' },
-    chart: { type: 'chart', description: '图表空数据' },
-    search: { type: 'search', description: '搜索无数据' },
-    permission: { type: 'permission', description: '无权限' },
-    overview: { type: 'overview', description: '概览无数据' },
+const getEmpty = (type) => {
+    switch (type) {
+        case 'default':
+            return <Empty type="default" />;
+        case 'project':
+            return <Empty type="project" description="空项目" />;
+        case 'chart':
+            return <Empty type="chart" description="图表空数据" />;
+        case 'search':
+            return <Empty type="search" description="搜索无数据" />;
+        case 'permission':
+            return <Empty type="permission" description="无权限" />;
+        case 'overview':
+            return <Empty type="overview" description="description" />;
+        default:
+            return null;
+    }
 };
 
 export default () => {
-    const [emptyValue, setEmptyValue] = useState('default');
+    const [emptyType, setEmptyType] = useState('default');
     return (
         <>
             <Space direction="vertical" style={{ width: '100%' }} size={16}>
@@ -51,12 +61,9 @@ export default () => {
                     defaultValue="default"
                     optionType="button"
                     options={options}
-                    onChange={(e) => setEmptyValue(e.target.value)}
+                    onChange={(e) => setEmptyType(e.target.value)}
                 />
-                <Empty
-                    type={emptyMap[emptyValue].type}
-                    description={emptyMap[emptyValue].description}
-                />
+                {getEmpty(emptyType)}
             </Space>
         </>
     );
