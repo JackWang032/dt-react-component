@@ -1,27 +1,35 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import utils from '../utils';
 
 export interface Fields {
-    key?: string;
-    value?: string | null;
+    key: string;
+    value: string | null;
 }
-export interface CookiesProps {
-    watchFields?: string[];
-    intervalTime?: number;
-    onChanged?: (old: string, newCookie: string) => void;
-    onFieldsChanged?: (fields: Fields[]) => void;
-    children?: React.ReactNode;
+export interface ICookieOptions {
+    intervalTime?: number; // 轮训间隔
+    immediately?: boolean; // 当Cookie字段为新增时是否会触发
 }
-/**
- * Cookies 组件
- * 用法：
- * <Cookies onChanged={callback}></Cookies>
- */
 
-const Cookies: React.FC<CookiesProps> = (props) => {
-    const { watchFields, intervalTime = 200, onChanged, onFieldsChanged, children } = props;
+const defaultOptions: ICookieOptions = {
+    intervalTime: 200,
+    immediately: false,
+};
+
+type CompareCookieHandler = (params: {
+    oldCookies: string;
+    newCookies: string;
+    changedFields?: Fields[];
+}) => void;
+
+const useCookieListener = (
+    handler: CompareCookieHandler,
+    watchFields: string[],
+    options: ICookieOptions = defaultOptions
+) => {
+    const { intervalTime, immediately } = options;
     const timerRef = useRef<number>();
     const currentCookiesRef = useRef<string>(document.cookie);
+    const isWatchAll = !watchFields.length;
 
     useEffect(() => {
         timerRef.current = window.setInterval(() => {
@@ -32,34 +40,29 @@ const Cookies: React.FC<CookiesProps> = (props) => {
         };
     }, []);
 
-    const onFieldsChange = (old: string, newCookies: string) => {
-        if (watchFields) {
-            const changedFields: Fields[] = [];
-            for (let i = 0; i < watchFields.length; i++) {
-                const key = watchFields[i];
-                const originValue = utils.getCookieValue(old, key);
-                const newValue = utils.getCookieValue(newCookies, key);
-                if (originValue !== null && originValue !== newValue) {
-                    changedFields.push({ key, value: newValue });
-                }
-            }
-            if (onFieldsChanged) {
-                onFieldsChanged(changedFields);
+    const onFieldsChange = (oldCookies: string, newCookies: string) => {
+        const changedFields: Fields[] = [];
+        for (let i = 0; i < watchFields.length; i++) {
+            const key = watchFields[i];
+            const originValue = utils.getCookie(key, oldCookies);
+            const newValue = utils.getCookie(key, newCookies);
+            if ((originValue !== null || immediately) && originValue !== newValue) {
+                changedFields.push({ key, value: newValue });
             }
         }
+        changedFields.length && handler({ changedFields, oldCookies, newCookies });
     };
 
     const compareValue = () => {
-        const old = '' + currentCookiesRef.current;
+        const oldCookies = currentCookiesRef.current;
         const newCookies = document.cookie;
-        if (old !== newCookies) {
-            if (onChanged) onChanged(old, newCookies);
+        if (oldCookies !== newCookies) {
+            isWatchAll
+                ? handler({ oldCookies, newCookies })
+                : onFieldsChange(oldCookies, newCookies);
             currentCookiesRef.current = newCookies;
-            onFieldsChange(old, newCookies);
         }
     };
-
-    return <React.Fragment>{children}</React.Fragment>;
 };
 
-export default Cookies;
+export default useCookieListener;
